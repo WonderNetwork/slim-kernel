@@ -11,13 +11,15 @@ final class HookCollection {
     public function __construct() {
     }
 
-    public function add(StartupHook $hook): void {
-        $this->hooks[] = $hook;
+    public function add(StartupHook ...$hooks): void {
+        foreach ($hooks as $hook) {
+            $this->hooks[] = $hook;
+        }
     }
 
-    public function boot(ContainerInterface $container): ContainerInterface {
+    public function boot(ServicesBuilder $builder, ContainerInterface $container): ContainerInterface {
         foreach ($this->hooks as $hook) {
-            $hook($container);
+            $hook($builder, $container);
         }
         return $container;
     }

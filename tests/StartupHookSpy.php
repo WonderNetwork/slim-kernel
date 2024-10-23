@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 final class StartupHookSpy implements StartupHook {
     public ?ContainerInterface $container = null;
 
-    public function __invoke(ContainerInterface $container): void {
+    public function __invoke(ServicesBuilder $builder, ContainerInterface $container): void {
         $this->container = $container;
     }
 }

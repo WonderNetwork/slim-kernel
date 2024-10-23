@@ -1,24 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace WonderNetwork\SlimKernel\ServiceFactory;
+namespace WonderNetwork\SlimKernel\StartupHook;
 
+use Psr\Container\ContainerInterface;
 use Slim\App;
-use WonderNetwork\SlimKernel\ServiceFactory;
 use WonderNetwork\SlimKernel\ServicesBuilder;
 use WonderNetwork\SlimKernel\SlimExtension\SlimClosuresCollection;
-use function DI\decorate;
+use WonderNetwork\SlimKernel\StartupHook;
 
-final class RoutesServiceFactory implements ServiceFactory {
+final class RoutesStartupHook implements StartupHook {
     private string $path;
 
     public function __construct(string $path) {
         $this->path = $path;
     }
 
-    public function __invoke(ServicesBuilder $builder): iterable {
+    public function __invoke(ServicesBuilder $builder, ContainerInterface $container): void {
         $closures = SlimClosuresCollection::of(...$builder->files()->glob($this->path));
 
-        yield App::class => decorate(static fn (App $previous) => $closures->applyTo($previous));
+        $app = $container->get(App::class);
+        $closures->applyTo($app);
     }
 }

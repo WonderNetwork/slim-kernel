@@ -6,5 +6,5 @@ namespace WonderNetwork\SlimKernel;
 use Psr\Container\ContainerInterface;
 
 interface StartupHook {
-    public function __invoke(ContainerInterface $container): void;
+    public function __invoke(ServicesBuilder $builder, ContainerInterface $container): void;
 }

@@ -18,6 +18,7 @@ composer require wondernetwork/slim-kernel
 ```php
 use WonderNetwork\SlimKernel\KernelBuilder;
 use WonderNetwork\SlimKernel\ServiceFactory\SymfonyConsoleServiceFactory;
+use WonderNetwork\SlimKernel\StartupHook\RoutesStartupHook;
 
 // configure the container:
 $container = KernelBuilder::start(
@@ -42,6 +43,10 @@ $container = KernelBuilder::start(
             // and adds commands matching this glob pattern:
             __DIR__.'/../src/Cli/**/*Command.php',
         ),
+    )
+    ->onStartup(
+        // automatically add routes
+        new RoutesStartupHook(__DIR__.'/../app/routes/*.php'),
     )
     // only pass a path for prod environments, null otherwise
     ->useCache(__DIR__.'/../.cache')
@@ -88,6 +93,33 @@ You might want some initialization code to run on each request and each invocati
 of a CLI command. This is best place to setup some global error handlers, boot some
 static properties, etc. To do so, pass an object implementing `StartupHook` to the
 `onStartup()` method
+
+### Routes Startup Hook
+
+`WonderNetwork\SlimKernel\StartupHook\RouteStartupHook`
+
+If you would like to get your routes registered in a declarative manner,
+use this startup hook to point to files containing your route definitions.
+Each of the files matched by the glob pattern **needs to return** a closure,
+which takes `Slim\App`, or more precisely `Slim\Interfaces\RouteCollectorProxyInterface`.
+This means you can use it for more than routes: for example global middlewares.
+The closures will be evaluated on a Slim Application fetched from the container.
+
+```php
+$kernelBuilder->onStartup(
+    new \WonderNetwork\SlimKernel\StartupHook\RoutesStartupHook(
+        __DIR__.'/../routes/*.php',
+    ),
+);
+// app/routes/some.php
+use Psr\Http\Message\ResponseInterface;
+return static function (Slim\App $app) {
+  $app->get('/hello/{message}', function (ResponseInterface $response, string $message) {
+    return $response->withHeader("X-Hello", $message);
+  });
+}
+```
+
 
 ## Error handling
 
@@ -146,30 +178,4 @@ return new WonderNetwork\SlimKernel\ServiceFactory\SymfonyConsoleServiceFactory(
     // name for your symfony console application
     'acme v1.0', 
 );
-```
-
-### Routes Service Factory
-
-`WonderNetwork\SlimKernel\ServiceFactory\RouteServiceFactory`
-
-If you would like to get your routes registered in a declarative manner,
-use this service factory to point to files containing your route definitions.
-Each of the files matched by the glob pattern **needs to return** a closure,
-which takes `Slim\App`, or more precisely `Slim\Interfaces\RouteCollectorProxyInterface`.
-This means you can use it for more than routes: for example global middlewares.
-The closures will be evaluated whenever the Slim Application is fetched from
-the container.
-
-```php
-// app/services/routes.php
-return new WonderNetwork\SlimKernel\ServiceFactory\RoutesServiceFactory(
-    __DIR__.'/../routes/*.php',
-);
-// app/routes/some.php
-use Psr\Http\Message\ResponseInterface;
-return static function (Slim\App $app) {
-  $app->get('/hello/{message}', function (ResponseInterface $response, string $message) {
-    return $response->withHeader("X-Hello", $message);
-  });
-}
 ```

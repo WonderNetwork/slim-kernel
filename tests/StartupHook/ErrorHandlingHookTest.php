@@ -9,14 +9,15 @@ use Slim\App;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Throwable;
 use WonderNetwork\SlimKernel\KernelBuilder;
-use WonderNetwork\SlimKernel\ServiceFactory\RoutesServiceFactory;
 
 class ErrorHandlingHookTest extends TestCase {
     public function testCustomMiddlewaresTakePrecedence() {
         $container = KernelBuilder::start(__DIR__.'/../Resources/ErrorMiddleware')
             ->glob('app/services/*.php')
-            ->register(new RoutesServiceFactory('app/middlewares/*.php'))
-            ->register(new RoutesServiceFactory('app/routes/*.php'))
+            ->onStartup(
+                new RoutesStartupHook('app/middlewares/*.php'),
+                new RoutesStartupHook('app/routes/*.php'),
+            )
             ->build();
 
         /** @var App $app */

@@ -6,6 +6,7 @@ namespace WonderNetwork\SlimKernel;
 use DI\ContainerBuilder;
 use Exception;
 use Psr\Container\ContainerInterface;
+use function WonderNetwork\SlimKernel\Collection\map;
 use function WonderNetwork\SlimKernel\Collection\toArray;
 
 final class KernelBuilder {
@@ -22,7 +23,6 @@ final class KernelBuilder {
         $this->builder = new ContainerBuilder();
         $this->startupHook = new HookCollection();
         $this->register(new ServiceFactory\SlimServiceFactory());
-        $this->onStartup(new StartupHook\ErrorHandlingHook());
     }
 
     /** @param array<string|mixed> $definitions */
@@ -31,13 +31,19 @@ final class KernelBuilder {
         return $this;
     }
 
-    public function register(ServiceFactory $serviceFactory): self {
-        $this->builder->addDefinitions(toArray($serviceFactory($this->servicesBuilder)));
+    public function register(ServiceFactory ...$serviceFactories): self {
+        $this->builder->addDefinitions(
+            ...
+            map(
+                $serviceFactories,
+                fn (ServiceFactory $serviceFactory) => toArray($serviceFactory($this->servicesBuilder)),
+            ),
+        );
         return $this;
     }
 
-    public function onStartup(StartupHook $hook): self {
-        $this->startupHook->add($hook);
+    public function onStartup(StartupHook ...$hooks): self {
+        $this->startupHook->add(...$hooks);
         return $this;
     }
 
@@ -59,6 +65,7 @@ final class KernelBuilder {
      * @throws Exception
      */
     public function build(): ContainerInterface {
-        return $this->startupHook->boot($this->builder->build());
+        $this->onStartup(new StartupHook\ErrorHandlingHook());
+        return $this->startupHook->boot($this->servicesBuilder, $this->builder->build());
     }
 }
