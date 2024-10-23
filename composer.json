@@ -1,0 +1,43 @@
+{
+    "name": "wondernetwork/slim-kernel",
+    "type": "library",
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-json": "*",
+        "slim/slim": "^4.14",
+        "slim/psr7": "^1.6",
+        "php-di/php-di": "^6.4",
+        "dusank/knapsack": "^10.0",
+        "php-di/slim-bridge": "^3.4",
+        "symfony/console": "^5.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WonderNetwork\\SlimKernel\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WonderNetwork\\SlimKernel\\": "tests/",
+            "Acme\\": [
+                "tests/Resources/App/src/",
+                "tests/Resources/ErrorMiddleware/src/"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Maciej Łebkowski",
+            "email": "m.lebkowski@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpstan/phpstan": "^1.12",
+        "phpunit/phpunit": "^9.6",
+        "bnf/phpstan-psr-container": "^1.0"
+    }
+}
