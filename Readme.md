@@ -1,7 +1,5 @@
 # Wonder Slim Kernel
 
-Test pull request
-
 This package aims to provide a set of configuration helpers for Slim v4 microframework.
 By using the `KernelBuilder`, one can easily bootstrap the `Slim\App` service,
 along with a `DI\Container` dependency injection container, declaratively define
