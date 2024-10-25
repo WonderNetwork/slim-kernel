@@ -173,21 +173,21 @@ class ArrayAccessorTest extends TestCase {
     public function testAtNoKey(): void {
         self::assertEquals(
             [],
-            ArrayAccessor::of([])->at('weekdays')->allStrings(),
+            ArrayAccessor::of([])->at('weekdays')->allString(),
         );
     }
 
     public function testAtEmptyArray(): void {
         self::assertEquals(
             [],
-            ArrayAccessor::of(['weekdays' => []])->at('weekdays')->allStrings(),
+            ArrayAccessor::of(['weekdays' => []])->at('weekdays')->allString(),
         );
     }
 
     public function testAtFilledArray(): void {
         self::assertEquals(
             ['monday'],
-            ArrayAccessor::of(['weekdays' => ['monday']])->at('weekdays')->allStrings(),
+            ArrayAccessor::of(['weekdays' => ['monday']])->at('weekdays')->allString(),
         );
     }
 

@@ -120,7 +120,6 @@ return static function (Slim\App $app) {
 }
 ```
 
-
 ## Error handling
 
 The default error handling middleware is added. It’s configured to silently log
@@ -179,3 +178,62 @@ return new WonderNetwork\SlimKernel\ServiceFactory\SymfonyConsoleServiceFactory(
     'acme v1.0', 
 );
 ```
+
+
+## Convenience methods to access strongly typed input argumets
+
+```php
+// HTTP
+$requestParams = WonderNetwork\SlimKernel\Http\RequestParams::of($serverRequest);
+$requestParams->post->requireString('userId'); 
+$requestParams->query->int('limit', 10); 
+$requestParams->server->bool('HTTPS');
+// simpler interface, since route arguments are all string:
+WonderNetwork\SlimKernel\Http\RouteArgument::get($serverRequest, 'userId');
+WonderNetwork\SlimKernel\Http\RouteArgument::find($serverRequest, 'userId');
+WonderNetwork\SlimKernel\Http\RouteArgument::maybe($serverRequest, 'userId');
+// CLI
+$cliParams = WonderNetwork\SlimKernel\Cli\InputParams::ofInput($input);
+$cliParams->options
+$cliParams->arguments
+```
+
+This package is aimed at **accessing trusted payloads**. In other words, it does
+not aim at validating an unknown payload, but rather asserts that the structure
+is correct, so that we can use semantic methods to get strong type guarantees.
+The package does not try to handle any situation -- except for basic type casting,
+it throws if it encounters some unexpected input.
+
+ * _Request Params_: created from `RequestInterface` and represent request body,
+   query and server params. Each field is returned as an [Array Accessor](#array-accessor)
+
+ * _Input Params_: created from `InputInterface` and represent command line
+   arguments and options. Each field is returned as an [Array Accessor](#array-accessor)
+
+ * _Route Argument_: created from `RequestInterface` and represent the arguments
+   matched by slim routing. 
+
+### Array Accessor
+
+ * `string(key, default = '')` 
+   * gets the interpolated string value of given field
+   * returns default on missing and null values
+   * throws on non-scalar values
+ * `maybeString(key)` see above, but returns null as the default
+ * `requireString(key)` see above, but throws as the default
+ * `int(key, default = 0)` similar to string, casts numeric strings to ints
+ * `maybeInt()` and `requireInt()` similarly to string methods
+ * `bool(key)` interpolates `1` and `0` to boolean
+ * `maybeBool()` and `requireBool()` see above
+ * `array(key)` 
+   * returns a mixed array on given key
+   * returns an empty array if key does not exist
+   * throws if key exists but does not explicitly contain an array
+ * `maybeArray(key)` see above, but returns null by default
+ * `at(key)` 
+   * returns an array accessor representing a nested structure
+   * uses null object pattern, so returns an empty accessor if the
+     key does not exist or is not an array
+ * `allString()`, `allInt()`, `allBool()` 
+   * ensures all items of payload match a given type
+   * returns an array of scalars of that type (`string[]`, `int[]`, `bool[]`)

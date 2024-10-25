@@ -11,6 +11,7 @@ use WonderNetwork\SlimKernel\Accessor\ArrayAccessor;
 
 /**
  * @property ArrayAccessor $params
+ * @property ArrayAccessor $post
  * @property ArrayAccessor $query
  * @property ArrayAccessor $server
  */
@@ -38,6 +39,7 @@ final class RequestParams {
     public function __get(string $name): ArrayAccessor {
         switch ($name) {
             case 'params':
+            case 'post':
                 return $this->params;
             case 'query':
                 return $this->query;

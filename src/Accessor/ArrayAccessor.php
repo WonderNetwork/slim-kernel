@@ -63,7 +63,7 @@ final class ArrayAccessor {
     /**
      * @return string[]
      */
-    public function allStrings(): array {
+    public function allString(): array {
         return map(
             $this->payload,
             function ($value, $key) {
