@@ -188,10 +188,10 @@ $requestParams = WonderNetwork\SlimKernel\Http\RequestParams::of($serverRequest)
 $requestParams->post->requireString('userId'); 
 $requestParams->query->int('limit', 10); 
 $requestParams->server->bool('HTTPS');
-// simpler interface, since route arguments are all string:
-WonderNetwork\SlimKernel\Http\RouteArgument::get($serverRequest, 'userId');
-WonderNetwork\SlimKernel\Http\RouteArgument::find($serverRequest, 'userId');
-WonderNetwork\SlimKernel\Http\RouteArgument::maybe($serverRequest, 'userId');
+// route arguments are all string, but you can still cast them to ints
+$routeArguments = WonderNetwork\SlimKernel\Http\RouteArgument::of($serverRequest);
+$routeArguments->string('token');
+$routeArguments->int('limit', 10);
 // CLI
 $cliParams = WonderNetwork\SlimKernel\Cli\InputParams::ofInput($input);
 $cliParams->options
@@ -211,7 +211,7 @@ it throws if it encounters some unexpected input.
    arguments and options. Each field is returned as an [Array Accessor](#array-accessor)
 
  * _Route Argument_: created from `RequestInterface` and represent the arguments
-   matched by slim routing. 
+   matched by slim routing. Returns a single [Array Accessor](#array-accessor)
 
 ### Array Accessor
 
