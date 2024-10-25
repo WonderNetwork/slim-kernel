@@ -41,7 +41,7 @@ function toArray($input): array {
  * @template T of mixed
  * @template F of mixed
  * @param iterable<T> $input
- * @param callable(T):F ...$fn
+ * @param callable(T,?(int|string)):F ...$fn
  * @return F[]
  */
 function map($input, callable ...$fn): array {
