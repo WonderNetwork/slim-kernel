@@ -237,3 +237,30 @@ it throws if it encounters some unexpected input.
  * `allString()`, `allInt()`, `allBool()` 
    * ensures all items of payload match a given type
    * returns an array of scalars of that type (`string[]`, `int[]`, `bool[]`)
+
+## Fingers Crossed CLI handler
+
+For all those pesky cron jobs, where on one hand you’d like to silence the output
+because it causes noisy emails for no reason, but at the same time you don’t want
+to lose context when something bad happens. Wrap your commands in a 
+`FingersCrossedHandler` like so:
+
+```php
+public function execute(InputInterface $input, OutputInterface $output): int {
+    return FingersCrossedHandler::of($input, $output)->run(
+        function (InputParams $input, FingersCrossedOutput $output) {
+            $output->write("Hello world!")
+            return 1;
+        },
+    );
+}
+```
+
+The output will be silenced except for the following situatios:
+
+ * You increase the output verbosity using the `-v` flag or the `setVerbosity()` method
+ * The command returns a non-zero exit code
+ * The command throws 
+
+In the former case, the output will be written in realtime, and in the two
+latter ones you can expect it writtein in bulk at the end.
