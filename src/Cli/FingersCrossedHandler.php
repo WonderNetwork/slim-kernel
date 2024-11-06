@@ -23,11 +23,11 @@ final class FingersCrossedHandler {
     }
 
     /**
-     * @param Closure(InputParams $input, FingersCrossedOutput $output):int $closure
+     * @param callable(InputParams $input, FingersCrossedOutput $output):int $closure
      * @return int
      * @throws Throwable
      */
-    public function run(Closure $closure): int {
+    public function run(callable $closure): int {
         $output = new FingersCrossedOutput($this->output);
         try {
             $result = $closure(InputParams::ofInput($this->input), $output);
