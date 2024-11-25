@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace WonderNetwork\SlimKernel\StartupHook;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use WonderNetwork\SlimKernel\KernelBuilder;
 
 class RoutesStartupHookTest extends TestCase {
     public function test(): void {
-        /** @var App $app */
+        /** @var App<ContainerInterface> $app */
         $app = KernelBuilder::start(__DIR__.'/../Resources/App')
             ->glob('app/services/*.php')
             ->onStartup(

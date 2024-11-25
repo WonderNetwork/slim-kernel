@@ -5,13 +5,14 @@ namespace WonderNetwork\SlimKernel\StartupHook;
 
 use Acme\ErrorHandlingSpy;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Throwable;
 use WonderNetwork\SlimKernel\KernelBuilder;
 
 class ErrorHandlingHookTest extends TestCase {
-    public function testCustomMiddlewaresTakePrecedence() {
+    public function testCustomMiddlewaresTakePrecedence(): void {
         $container = KernelBuilder::start(__DIR__.'/../Resources/ErrorMiddleware')
             ->glob('app/services/*.php')
             ->onStartup(
@@ -20,7 +21,7 @@ class ErrorHandlingHookTest extends TestCase {
             )
             ->build();
 
-        /** @var App $app */
+        /** @var App<ContainerInterface> $app */
         $app = $container->get(App::class);
         /** @var ErrorHandlingSpy $spy */
         $spy = $container->get(ErrorHandlingSpy::class);
