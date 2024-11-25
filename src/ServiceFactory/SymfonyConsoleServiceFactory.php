@@ -5,6 +5,7 @@ namespace WonderNetwork\SlimKernel\ServiceFactory;
 
 use DI\Definition\Helper\CreateDefinitionHelper;
 use Symfony\Component\Console;
+use WonderNetwork\SlimKernel\Cli\AutoExit;
 use WonderNetwork\SlimKernel\ServiceFactory;
 use WonderNetwork\SlimKernel\ServicesBuilder;
 use function DI\autowire;
@@ -22,6 +23,7 @@ final class SymfonyConsoleServiceFactory implements ServiceFactory {
 
     public function __invoke(ServicesBuilder $builder): iterable {
         yield from $commands = $builder->autowire()->glob($this->path);
+        yield AutoExit::class => AutoExit::no();
 
         yield Console\Application::class => collection($commands)
             ->keys()
@@ -29,7 +31,7 @@ final class SymfonyConsoleServiceFactory implements ServiceFactory {
                 static fn(CreateDefinitionHelper $def, string $command) => $def->method('add', get($command)),
                 autowire()
                     ->constructor($this->name)
-                    ->method('setAutoExit', false),
+                    ->method('setAutoExit', static fn (AutoExit $autoExit) => $autoExit->value()),
             );
     }
 }

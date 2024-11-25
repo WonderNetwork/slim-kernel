@@ -22,7 +22,7 @@ class SymfonyConsoleServiceFactoryTest extends TestCase {
         $commands = $actual
             ->keys()
             ->reverse()
-            ->drop(1)
+            ->drop(count(['Application', 'AutoExit']))
             ->reverse()
             ->toArray();
 
