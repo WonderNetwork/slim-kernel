@@ -49,8 +49,8 @@ final class StringValue {
     }
 
     public function toFloat(): float {
-        if (is_int($this->raw)) {
-            return $this->raw;
+        if (is_float($this->raw) || is_int($this->raw)) {
+            return (float) $this->raw;
         }
 
         if (false === is_numeric($this->value)) {
