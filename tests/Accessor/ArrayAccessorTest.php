@@ -43,7 +43,7 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testStringBailsOnArray(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => ['a', 'b']])->string('foo');
     }
     // endregion
@@ -76,19 +76,19 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testMaybeStringBailsOnArray(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => ['a', 'b']])->maybeString('foo');
     }
     // endregion
 
     // region requireString
     public function testRequireStringBailsNoKey(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of([])->requireString('foo');
     }
 
     public function testRequireStringBailsOnNull(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => null])->requireString('foo');
     }
 
@@ -107,7 +107,7 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testRequireStringBailsOnArray(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => ['a', 'b']])->requireString('foo');
     }
     // endregion
@@ -128,8 +128,29 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testIntBailsOnInvalidString(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => "bar"])->int("foo");
+    }
+    // endregion
+
+    // region float
+    public function testFloatCastsString(): void {
+        self::assertSame(
+            1.0,
+            ArrayAccessor::of(['foo' => "1"])->float("foo"),
+        );
+    }
+
+    public function testFloatCastsStringWithDotForDecimalSeparator(): void {
+        self::assertSame(
+            1.123,
+            ArrayAccessor::of(['foo' => "1.123"])->float("foo"),
+        );
+    }
+
+    public function testFloatBailsOnInvalidString(): void {
+        $this->expectException(ArrayAccessorException::class);
+        ArrayAccessor::of(['foo' => "bar"])->float("foo");
     }
     // endregion
 
@@ -159,12 +180,12 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testBoolBailsOnOtherNumbers(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => 10])->bool("foo");
     }
 
     public function testBoolBailsOnInvalidString(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['foo' => "bar"])->bool("foo");
     }
     // endregion
@@ -198,7 +219,7 @@ class ArrayAccessorTest extends TestCase {
     }
 
     public function testMaybeAtBailsOnStringKey(): void {
-        self::expectException(ArrayAccessorException::class);
+        $this->expectException(ArrayAccessorException::class);
         ArrayAccessor::of(['weekdays' => 'string'])->maybeAt('weekdays');
     }
 
