@@ -48,6 +48,18 @@ final class StringValue {
         return (int) $this->value;
     }
 
+    public function toFloat(): float {
+        if (is_float($this->raw) || is_int($this->raw)) {
+            return (float) $this->raw;
+        }
+
+        if (false === is_numeric($this->value)) {
+            throw new StringValueException('Can’t convert non-numeric value to a float');
+        }
+
+        return (float) $this->value;
+    }
+
     /**
      * @throws StringValueException
      */

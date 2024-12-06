@@ -93,6 +93,22 @@ final class ArrayAccessor {
     }
 
     /**
+     * @return float[]
+     */
+    public function allFloat(): array {
+        return map(
+            $this->payload,
+            function ($value, $key) {
+                try {
+                    return StringValue::of($value)->toFloat();
+                } catch (StringValueException $e) {
+                    $this->throw("Value at $key is not a float");
+                }
+            },
+        );
+    }
+
+    /**
      * @return bool[]
      */
     public function allBool(): array {
@@ -155,6 +171,31 @@ final class ArrayAccessor {
             return StringValue::of($raw)->toInt();
         } catch (StringValueException $e) {
             $this->throw("Required field named $name is not an int");
+        }
+    }
+
+    public function float(string $name, float $default = 0.0): float {
+        return $this->maybeFloat($name) ?? $default;
+    }
+
+    public function requireFloat(string $name): float {
+        $raw = $this->maybeFloat($name);
+        if (null === $raw) {
+            $this->throw("Required field named $name not found");
+        }
+        return $raw;
+    }
+
+    public function maybeFloat(string $name): ?float {
+        $raw = $this->payload[$name] ?? null;
+        if (null === $raw) {
+            return null;
+        }
+
+        try {
+            return StringValue::of($raw)->toFloat();
+        } catch (StringValueException $e) {
+            $this->throw("Required field named $name is not a float");
         }
     }
 
