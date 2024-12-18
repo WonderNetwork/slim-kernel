@@ -43,7 +43,7 @@ final class Autowire {
             $composer['autoload']['psr-4'] ?? [],
             static fn ($directories) => map(
                 (array) $directories,
-                static fn (string $directory) => rtrim($root.'/'.$directory, '/').'/',
+                static fn (string $directory) => realpath($root.'/'.$directory).'/',
             ),
         );
     }
