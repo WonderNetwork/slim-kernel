@@ -2,7 +2,7 @@
     "name": "wondernetwork/slim-kernel",
     "type": "library",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": ">=8.3",
         "ext-json": "*",
         "slim/slim": "^4.14",
         "slim/psr7": "^1.6",
@@ -10,7 +10,11 @@
         "dusank/knapsack": "^10.0",
         "php-di/slim-bridge": "^3.4",
         "symfony/console": "^5.4",
-        "symfony/finder": "^5.4"
+        "symfony/finder": "^5.4",
+        "symfony/property-access": "^7.2",
+        "symfony/serializer": "^7.2",
+        "phpstan/phpdoc-parser": "^2.0",
+        "phpdocumentor/reflection-docblock": "^5.6"
     },
     "license": "MIT",
     "autoload": {
