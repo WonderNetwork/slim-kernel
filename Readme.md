@@ -264,3 +264,23 @@ The output will be silenced except for the following situatios:
 
 In the former case, the output will be written in realtime, and in the two
 latter ones you can expect it writtein in bulk at the end.
+
+
+## Input parsing 
+
+In order to simplify input parsing, you can use the Symfony Serializer component to 
+automatically denormalize parsed request body or get params to a data transfer object
+of your choice. In your controller, simply mark one of the parameters with `#[Payload]`
+attribute and typehint it with your desired class:
+
+```php
+public function __invoke(#[WonderNetwork\SlimKernel\Http\Serializer\Payload] MyDto $input) {}
+```
+
+If the serializer fails to denormalize the input, a HttpBadRequestException will be
+thrown with a semi-helpful message attached. If you require custom serializer setup,
+you can register your own instance using the following container key:
+
+```
+\WonderNetwork\SlimKernel\ServiceFactory\SlimServiceFactory::INPUT_DENORMALIZER
+```
