@@ -47,12 +47,12 @@ final class SlimServiceFactory implements ServiceFactory {
         yield self::INPUT_DENORMALIZER => get(DenormalizerInterface::class);
 
         yield ControllerInvoker::class => static function (ContainerInterface $container) {
-            $serializer = $container->get(self::INPUT_DENORMALIZER);
+            $serializer = $container->get(SlimServiceFactory::INPUT_DENORMALIZER);
             if (false === $serializer instanceof DenormalizerInterface) {
                 throw new RuntimeException(
                     sprintf(
                         'Service registered under %s key is expected to implement %s interface, %s given',
-                        self::INPUT_DENORMALIZER,
+                        SlimServiceFactory::INPUT_DENORMALIZER,
                         DenormalizerInterface::class,
                         get_debug_type($serializer),
                     ),
