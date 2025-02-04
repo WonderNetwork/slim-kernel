@@ -6,15 +6,15 @@
         "ext-json": "*",
         "slim/slim": "^4.14",
         "slim/psr7": "^1.6",
-        "php-di/php-di": "^6.4",
-        "dusank/knapsack": "^10.0",
+        "php-di/php-di": "^7",
         "php-di/slim-bridge": "^3.4",
-        "symfony/console": "^5.4",
-        "symfony/finder": "^5.4",
+        "symfony/console": "^5.4 | ^6 | ^7",
+        "symfony/finder": "^5.4 | ^6 | ^7",
         "symfony/property-access": "^7.2",
         "symfony/serializer": "^7.2",
         "phpstan/phpdoc-parser": "^2.0",
-        "phpdocumentor/reflection-docblock": "^5.6"
+        "phpdocumentor/reflection-docblock": "^5.6",
+        "wondernetwork/php-collection-library": "^10.0"
     },
     "license": "MIT",
     "autoload": {
@@ -41,8 +41,8 @@
         }
     ],
     "require-dev": {
-        "phpstan/phpstan": "^1.12",
-        "phpunit/phpunit": "^9.6",
+        "phpstan/phpstan": "^2",
+        "phpunit/phpunit": "^11",
         "bnf/phpstan-psr-container": "^1.0"
     }
 }

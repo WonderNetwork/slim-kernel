@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
 use Psr\Container\ContainerInterface;
@@ -11,6 +12,7 @@ use function WonderNetwork\SlimKernel\Collection\toArray;
 
 final class KernelBuilder {
     private ServicesBuilder $servicesBuilder;
+    /** @var ContainerBuilder<Container> */
     private ContainerBuilder $builder;
     private HookCollection $startupHook;
 
