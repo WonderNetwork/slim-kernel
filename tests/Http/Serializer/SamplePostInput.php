@@ -8,4 +8,5 @@ final class SamplePostInput {
     public int $value;
     /** @var TagInput[] */
     public array $tags;
+    public TagInput $tag;
 }

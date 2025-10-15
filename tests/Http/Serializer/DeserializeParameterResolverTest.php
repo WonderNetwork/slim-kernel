@@ -24,6 +24,9 @@ class DeserializeParameterResolverTest extends TestCase {
                 ['name' => 'cats'],
                 ['name' => 'dogs'],
             ],
+            'tag' => [
+                'name' => 'alpha',
+            ],
         ];
         $get = [
             'page' => 3,
@@ -33,8 +36,17 @@ class DeserializeParameterResolverTest extends TestCase {
             ->createServerRequest('GET', '/?'.http_build_query($get))
             ->withParsedBody($post);
         $response = $app->handle($request);
+
+        $body = $response->getBody()->getContents();
+
+        self::assertSame(
+            200,
+            $response->getStatusCode(),
+            $body,
+        );
+
         $actual = json_decode(
-            $response->getBody()->getContents(),
+            $body,
             associative: true,
             depth: 12,
             flags: JSON_THROW_ON_ERROR,

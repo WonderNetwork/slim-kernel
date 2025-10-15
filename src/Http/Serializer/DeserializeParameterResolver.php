@@ -7,6 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use ReflectionFunctionAbstract;
 use ReflectionNamedType;
 use Slim\Exception\HttpBadRequestException;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -50,10 +52,16 @@ final readonly class DeserializeParameterResolver implements ParameterResolver {
                     PayloadSource::Get => $request->getQueryParams(),
                 };
 
+                $format = match ($attribute->source) {
+                    PayloadSource::Post => JsonEncoder::FORMAT,
+                    PayloadSource::Get => CsvEncoder::FORMAT,
+                };
+
                 try {
                     $resolvedParameters[$index] = $this->serializer->denormalize(
                         $data,
                         $parameterClass,
+                        format: $format,
                         context: $attribute->context,
                     );
                 } catch (NotNormalizableValueException $e) {
