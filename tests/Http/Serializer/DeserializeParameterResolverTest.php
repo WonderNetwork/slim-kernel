@@ -30,6 +30,14 @@ class DeserializeParameterResolverTest extends TestCase {
         ];
         $get = [
             'page' => 3,
+            'lists' => ['alpha', 'bravo'],
+            'arrays' => ['charlie' => 'delta'],
+            'booleans' => [
+                'true' => true,
+                'false' => false,
+                'one' => 1,
+                'zero' => 0,
+            ],
         ];
 
         $request = (new ServerRequestFactory())
