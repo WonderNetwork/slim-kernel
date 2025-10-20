@@ -19,6 +19,8 @@ use Slim\Interfaces\CallableResolverInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Psr7\Factory\ResponseFactory;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -38,7 +40,12 @@ final class SlimServiceFactory implements ServiceFactory {
         yield Serializer::class => static fn () => new Serializer([
             new ArrayDenormalizer(),
             new ObjectNormalizer(
-                propertyTypeExtractor: new PhpDocExtractor(),
+                propertyTypeExtractor: new PropertyInfoExtractor(
+                    typeExtractors: [
+                        new PhpDocExtractor(),
+                        new ReflectionExtractor(),
+                    ],
+                ),
             ),
         ]);
         yield DenormalizerInterface::class => get(Serializer::class);

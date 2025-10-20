@@ -12,10 +12,11 @@ final readonly class EchoController {
         #[Payload(source: PayloadSource::Get)] SampleGetInput $get,
         ResponseInterface $response,
     ): ResponseInterface {
-        return $response->withBody(
-            (new StreamFactory())->createStream(
-                json_encode(compact('post', 'get'), JSON_THROW_ON_ERROR),
-            ),
-        );
+        $streamFactory = new StreamFactory();
+        $payload = compact('post', 'get');
+        $json = json_encode($payload, JSON_THROW_ON_ERROR);
+        $body = $streamFactory->createStream($json);
+
+        return $response->withBody($body);
     }
 }
