@@ -9,4 +9,5 @@ final class SamplePostInput {
     /** @var TagInput[] */
     public array $tags;
     public TagInput $tag;
+    public SampleEnum $enum;
 }

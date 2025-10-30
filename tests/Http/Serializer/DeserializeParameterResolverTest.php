@@ -27,6 +27,7 @@ class DeserializeParameterResolverTest extends TestCase {
             'tag' => [
                 'name' => 'alpha',
             ],
+            'enum' => 'foo',
         ];
         $get = [
             'page' => 3,
