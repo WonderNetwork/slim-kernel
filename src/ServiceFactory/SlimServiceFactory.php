@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -39,6 +40,7 @@ final class SlimServiceFactory implements ServiceFactory {
     public function __invoke(ServicesBuilder $builder): iterable {
         yield Serializer::class => static fn () => new Serializer([
             new ArrayDenormalizer(),
+            new BackedEnumNormalizer(),
             new ObjectNormalizer(
                 propertyTypeExtractor: new PropertyInfoExtractor(
                     typeExtractors: [
