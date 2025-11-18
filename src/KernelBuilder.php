@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -30,6 +31,7 @@ final class KernelBuilder {
     /** @param array<string|mixed> $definitions */
     public function add(array $definitions): self {
         $this->builder->addDefinitions($definitions);
+
         return $this;
     }
 
@@ -41,11 +43,13 @@ final class KernelBuilder {
                 fn (ServiceFactory $serviceFactory) => toArray($serviceFactory($this->servicesBuilder)),
             ),
         );
+
         return $this;
     }
 
     public function onStartup(StartupHook ...$hooks): self {
         $this->startupHook->add(...$hooks);
+
         return $this;
     }
 
@@ -53,6 +57,7 @@ final class KernelBuilder {
         $this->builder->addDefinitions(
             ...DefinitionFileWithContext::fromManyPatterns($this->servicesBuilder, ...$patterns),
         );
+
         return $this;
     }
 
@@ -60,6 +65,7 @@ final class KernelBuilder {
         if ($path) {
             $this->builder->enableCompilation($path);
         }
+
         return $this;
     }
 
@@ -68,6 +74,7 @@ final class KernelBuilder {
      */
     public function build(): ContainerInterface {
         $this->onStartup(new StartupHook\ErrorHandlingHook());
+
         return $this->startupHook->boot($this->servicesBuilder, $this->builder->build());
     }
 }

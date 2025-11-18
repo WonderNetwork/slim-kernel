@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\StartupHook;
@@ -11,7 +12,7 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 use Throwable;
 use WonderNetwork\SlimKernel\KernelBuilder;
 
-class ErrorHandlingHookTest extends TestCase {
+final class ErrorHandlingHookTest extends TestCase {
     public function testCustomMiddlewaresTakePrecedence(): void {
         $container = KernelBuilder::start(__DIR__.'/../Resources/ErrorMiddleware')
             ->glob('app/services/*.php')

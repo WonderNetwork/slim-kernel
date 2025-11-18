@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\ServiceFactory;
@@ -35,7 +36,7 @@ use WonderNetwork\SlimKernel\SlimExtension\ErrorMiddlewareConfiguration;
 use function DI\get;
 
 final class SlimServiceFactory implements ServiceFactory {
-    public const string INPUT_DENORMALIZER = self::class . ':input-denormalizer';
+    public const string INPUT_DENORMALIZER = self::class.':input-denormalizer';
 
     public function __invoke(ServicesBuilder $builder): iterable {
         yield Serializer::class => static fn () => new Serializer([
@@ -57,6 +58,7 @@ final class SlimServiceFactory implements ServiceFactory {
 
         yield ControllerInvoker::class => static function (ContainerInterface $container) {
             $serializer = $container->get(SlimServiceFactory::INPUT_DENORMALIZER);
+
             if (false === $serializer instanceof DenormalizerInterface) {
                 throw new RuntimeException(
                     sprintf(
@@ -88,7 +90,7 @@ final class SlimServiceFactory implements ServiceFactory {
         yield ErrorMiddleware::class => static fn (
             CallableResolverInterface $callableResolver,
             ResponseFactoryInterface $responseFactory,
-            ErrorMiddlewareConfiguration $configuration
+            ErrorMiddlewareConfiguration $configuration,
         ) => new ErrorMiddleware(
             $callableResolver,
             $responseFactory,

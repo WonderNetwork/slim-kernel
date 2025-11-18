@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace WonderNetwork\SlimKernel\Http\Serializer;
 
 use Invoker\ParameterResolver\ParameterResolver;
@@ -39,11 +41,13 @@ final readonly class DeserializeParameterResolver implements ParameterResolver {
 
         foreach ($parameters as $index => $parameter) {
             $parameterType = $parameter->getType();
+
             if (false === $parameterType instanceof ReflectionNamedType || $parameterType->isBuiltin()) {
                 continue;
             }
 
             $parameterClass = $parameterType->getName();
+
             foreach ($parameter->getAttributes(Payload::class) as $payload) {
                 /** @var Payload $attribute */
                 $attribute = $payload->newInstance();

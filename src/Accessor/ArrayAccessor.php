@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Accessor;
 
+use Throwable;
 use function WonderNetwork\SlimKernel\Collection\map;
 
 final class ArrayAccessor {
@@ -13,30 +15,36 @@ final class ArrayAccessor {
      */
     private $exceptionFactory;
 
-    /** @param mixed $input */
-    public static function of($input, callable $factory = null): self {
-        $factory ??= fn(string $message) => new ArrayAccessorException($message);
+    public static function of(mixed $input, callable $factory = null): self {
+        $factory ??= fn (string $message) => new ArrayAccessorException($message);
+
         if (is_array($input)) {
             return new self($input, $factory);
         }
+
         return self::empty($factory);
+    }
+
+    private static function empty(callable $exceptionFactory): self {
+        return new self([], $exceptionFactory);
     }
 
     /**
      * @param array<mixed,mixed> $payload
-     * @param callable(string):\Throwable $exceptionFactory
+     * @param callable(string):Throwable $exceptionFactory
      */
     private function __construct(array $payload, callable $exceptionFactory) {
         $this->payload = $payload;
         $this->exceptionFactory = $exceptionFactory;
     }
 
-    public function at(string $index): ArrayAccessor {
+    public function at(string $index): self {
         return $this->maybeAt($index) ?? self::empty($this->exceptionFactory);
     }
 
-    public function maybeAt(string $index): ?ArrayAccessor {
+    public function maybeAt(string $index): ?self {
         $raw = $this->maybeArray($index);
+
         if (null === $raw) {
             return null;
         }
@@ -44,9 +52,10 @@ final class ArrayAccessor {
         return new self($raw, $this->exceptionFactory);
     }
 
-    public function tryAtAny(string ...$keys): ArrayAccessor {
+    public function tryAtAny(string ...$keys): self {
         foreach ($keys as $key) {
             $accessor = $this->maybeAt($key);
+
             if ($accessor) {
                 return $accessor;
             }
@@ -130,14 +139,17 @@ final class ArrayAccessor {
 
     public function requireString(string $name): string {
         $raw = $this->maybeString($name);
+
         if (null === $raw) {
             $this->throw("Required field named $name not found");
         }
+
         return $raw;
     }
 
     public function maybeString(string $name): ?string {
         $raw = $this->payload[$name] ?? null;
+
         if (null === $raw) {
             return null;
         }
@@ -155,14 +167,17 @@ final class ArrayAccessor {
 
     public function requireInt(string $name): int {
         $raw = $this->maybeInt($name);
+
         if (null === $raw) {
             $this->throw("Required field named $name not found");
         }
+
         return $raw;
     }
 
     public function maybeInt(string $name): ?int {
         $raw = $this->payload[$name] ?? null;
+
         if (null === $raw) {
             return null;
         }
@@ -180,14 +195,17 @@ final class ArrayAccessor {
 
     public function requireFloat(string $name): float {
         $raw = $this->maybeFloat($name);
+
         if (null === $raw) {
             $this->throw("Required field named $name not found");
         }
+
         return $raw;
     }
 
     public function maybeFloat(string $name): ?float {
         $raw = $this->payload[$name] ?? null;
+
         if (null === $raw) {
             return null;
         }
@@ -205,14 +223,17 @@ final class ArrayAccessor {
 
     public function requireBool(string $name): bool {
         $raw = $this->maybeBool($name);
+
         if (null === $raw) {
             $this->throw("Required field named $name not found");
         }
+
         return $raw;
     }
 
     public function maybeBool(string $name): ?bool {
         $raw = $this->payload[$name] ?? null;
+
         if (null === $raw) {
             return null;
         }
@@ -232,12 +253,15 @@ final class ArrayAccessor {
     /** @return ?array<mixed,mixed> */
     public function maybeArray(string $name): ?array {
         $raw = $this->payload[$name] ?? null;
+
         if (null === $raw) {
             return null;
         }
+
         if (false === is_array($raw)) {
             $this->throw("Required field named $name is not an array");
         }
+
         return $raw;
     }
 
@@ -246,9 +270,5 @@ final class ArrayAccessor {
      */
     private function throw(string $message) {
         throw ($this->exceptionFactory)($message);
-    }
-
-    private static function empty(callable $exceptionFactory): self {
-        return new self([], $exceptionFactory);
     }
 }

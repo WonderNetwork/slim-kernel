@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -19,12 +20,14 @@ final class Autowire {
 
     public static function fromRootPath(string $root): self {
         $composerJson = file_get_contents($root.'/composer.json');
+
         if (false === $composerJson) {
             throw new RuntimeException('Error reading composer.json file');
         }
 
         /** @var ?ComposerJson $composer */
         $composer = json_decode($composerJson, true);
+
         if (false === is_array($composer)) {
             throw new RuntimeException('Error parsing composer.json file');
         }
@@ -33,7 +36,6 @@ final class Autowire {
     }
 
     /**
-     * @param string $root
      * @param ComposerJson $composer
      */
     private function __construct(string $root, array $composer) {
@@ -49,7 +51,6 @@ final class Autowire {
     }
 
     /**
-     * @param string $pattern
      * @return string[]
      */
     public function glob(string $pattern): array {
@@ -69,6 +70,7 @@ final class Autowire {
             foreach ($directories as $directory) {
                 if (str_starts_with($fileName, $directory)) {
                     $relativePath = substr($fileName, strlen($directory), -strlen('.php'));
+
                     return $namespace.strtr($relativePath, ['/' => '\\']);
                 }
             }

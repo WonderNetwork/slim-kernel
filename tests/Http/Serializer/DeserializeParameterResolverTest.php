@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Http\Serializer;
@@ -10,7 +11,7 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 use WonderNetwork\SlimKernel\KernelBuilder;
 use WonderNetwork\SlimKernel\SlimExtension\ErrorMiddlewareConfiguration;
 
-class DeserializeParameterResolverTest extends TestCase {
+final class DeserializeParameterResolverTest extends TestCase {
     public function testDeserialize(): void {
         $container = KernelBuilder::start(__DIR__.'/../../Resources/App')->build();
 
@@ -79,7 +80,7 @@ class DeserializeParameterResolverTest extends TestCase {
             'value' => 124,
             'tags' => [
                 'invalid format',
-            ]
+            ],
         ];
 
         $request = (new ServerRequestFactory())

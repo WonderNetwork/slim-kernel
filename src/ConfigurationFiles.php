@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -15,12 +16,12 @@ final class ConfigurationFiles {
     }
 
     /**
-     * @param string $pattern
      * @return Closure[]
      */
     public function glob(string $pattern): iterable {
         foreach (findFiles($this->root, $pattern) as $file) {
             $closure = require $file;
+
             if (false === $closure instanceof Closure) {
                 throw new RuntimeException(
                     sprintf("The return value from '%s' needs to be a closure", $file),

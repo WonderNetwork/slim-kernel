@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Http;
@@ -36,20 +37,6 @@ final class RequestParams {
         return new HttpBadRequestException($this->request, $message);
     }
 
-    public function __get(string $name): ArrayAccessor {
-        switch ($name) {
-            case 'params':
-            case 'post':
-                return $this->params;
-            case 'query':
-                return $this->query;
-            case 'server':
-                return $this->server;
-        }
-
-        throw new RuntimeException("Unknown collection: $name");
-    }
-
     /** @return never */
     public function notFound(string $message = null): void {
         throw new HttpNotFoundException($this->request, $message);
@@ -62,5 +49,19 @@ final class RequestParams {
 
     public function request(): ServerRequestInterface {
         return $this->request;
+    }
+
+    public function __get(string $name): ArrayAccessor {
+        switch ($name) {
+            case 'params':
+            case 'post':
+                return $this->params;
+            case 'query':
+                return $this->query;
+            case 'server':
+                return $this->server;
+        }
+
+        throw new RuntimeException("Unknown collection: $name");
     }
 }

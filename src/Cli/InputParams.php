@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Cli;
@@ -34,6 +35,7 @@ final class InputParams {
             case 'options':
                 return $this->options;
         }
+
         throw new RuntimeException("Unknown collection: $name");
     }
 }

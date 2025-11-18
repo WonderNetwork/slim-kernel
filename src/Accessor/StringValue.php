@@ -1,18 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Accessor;
 
 final class StringValue {
     private string $value;
-    /** @var mixed */
-    private $raw;
+    private mixed $raw;
 
     /**
-     * @param mixed $value
      * @throws StringValueException
      */
-    public static function of($value): self {
+    public static function of(mixed $value): self {
         if (false === is_scalar($value)) {
             throw new StringValueException('Can’t convert a non scalar value to string');
         }
@@ -20,11 +19,7 @@ final class StringValue {
         return new self((string) $value, $value);
     }
 
-    /**
-     * @param string $value
-     * @param mixed $raw
-     */
-    private function __construct(string $value, $raw) {
+    private function __construct(string $value, mixed $raw) {
         $this->value = $value;
         $this->raw = $raw;
     }

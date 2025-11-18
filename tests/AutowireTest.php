@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class AutowireTest extends TestCase {
+final class AutowireTest extends TestCase {
     private string $root;
 
     protected function setUp(): void {
@@ -21,7 +23,7 @@ class AutowireTest extends TestCase {
     }
 
     public function testThrowsWhenPsrRootNotFound(): void {
-        self::expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         Autowire::fromRootPath($this->root)->glob('/Echo/*.php');
     }
 }
