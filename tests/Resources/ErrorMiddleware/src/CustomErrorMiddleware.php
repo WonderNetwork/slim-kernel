@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Acme;
@@ -21,6 +22,7 @@ final class CustomErrorMiddleware implements MiddlewareInterface {
             return $handler->handle($request);
         } catch (Throwable $e) {
             $this->spy->handleError($e);
+
             throw $e;
         }
     }

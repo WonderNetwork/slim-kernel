@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Cli;
@@ -17,6 +18,7 @@ final class FingersCrossedOutput {
     public function writeln(string $message): void {
         if ($this->isBuffering()) {
             $this->messages[] = $message;
+
             return;
         }
         $this->flush();

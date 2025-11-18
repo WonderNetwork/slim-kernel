@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\ServiceFactory;
@@ -28,7 +29,7 @@ final class SymfonyConsoleServiceFactory implements ServiceFactory {
         yield Console\Application::class => collection($commands)
             ->keys()
             ->reduce(
-                static fn(CreateDefinitionHelper $def, string $command) => $def->method('add', get($command)),
+                static fn (CreateDefinitionHelper $def, string $command) => $def->method('add', get($command)),
                 autowire()
                     ->constructor($this->name)
                     ->method('setAutoExit', static fn (AutoExit $autoExit) => $autoExit->value()),

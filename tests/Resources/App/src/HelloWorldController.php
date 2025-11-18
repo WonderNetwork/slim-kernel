@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Acme;
@@ -17,7 +18,7 @@ final class HelloWorldController {
     public function __invoke(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        string $message
+        string $message,
     ): ResponseInterface {
         return $response
             ->withBody($this->streamFactory->createStream("Hello {$message}"))

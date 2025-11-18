@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -20,8 +21,6 @@ final class DefinitionFileWithContext implements DefinitionSource {
     private DefinitionArray $array;
 
     /**
-     * @param ServicesBuilder $builder
-     * @param string ...$patterns
      * @return Generator<self>
      */
     public static function fromManyPatterns(ServicesBuilder $builder, string ...$patterns): Generator {
@@ -59,8 +58,10 @@ final class DefinitionFileWithContext implements DefinitionSource {
         }
 
         $result = [];
+
         foreach ($this->files as $file) {
             $definitions = require $file;
+
             if ($definitions instanceof ServiceFactory) {
                 $definitions = $definitions($this->builder);
             }

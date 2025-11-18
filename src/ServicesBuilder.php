@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -17,7 +18,6 @@ final class ServicesBuilder {
     }
 
     /**
-     * @param string $pattern
      * @return string[]
      */
     public function glob(string $pattern): iterable {

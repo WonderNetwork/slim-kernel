@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\SlimExtension;
@@ -22,6 +23,9 @@ final class ErrorMiddlewareConfiguration {
         return new self();
     }
 
+    private function __construct() {
+    }
+
     public function isDisplayErrors(): bool {
         return $this->displayErrors;
     }
@@ -30,13 +34,11 @@ final class ErrorMiddlewareConfiguration {
         return $this->logErrors;
     }
 
-    private function __construct() {
-    }
-
     public function withLogging(): self {
         $result = new self();
         $result->displayErrors = $this->displayErrors;
         $result->logErrors = true;
+
         return $result;
     }
 
@@ -44,6 +46,7 @@ final class ErrorMiddlewareConfiguration {
         $result = new self();
         $result->displayErrors = $this->displayErrors;
         $result->logErrors = false;
+
         return $result;
     }
 
@@ -51,6 +54,7 @@ final class ErrorMiddlewareConfiguration {
         $result = new self();
         $result->displayErrors = true;
         $result->logErrors = $this->logErrors;
+
         return $result;
     }
 
@@ -58,6 +62,7 @@ final class ErrorMiddlewareConfiguration {
         $result = new self();
         $result->displayErrors = false;
         $result->logErrors = $this->logErrors;
+
         return $result;
     }
 }

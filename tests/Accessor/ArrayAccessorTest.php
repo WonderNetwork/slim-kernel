@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Accessor;
 
 use PHPUnit\Framework\TestCase;
 
-class ArrayAccessorTest extends TestCase {
+final class ArrayAccessorTest extends TestCase {
     // region string
     public function testStringOfNoKey(): void {
         self::assertSame(

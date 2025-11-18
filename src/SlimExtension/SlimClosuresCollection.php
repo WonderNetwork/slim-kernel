@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\SlimExtension;
@@ -33,11 +34,12 @@ final class SlimClosuresCollection {
             ->map(static fn (ReflectionNamedType $type) => $type->getName())
             ->filter(static fn (string $name) => false === in_array($name, self::ALLOWED_TYPES, true))
             ->each(
-                static function (string $name) {
+                static function (string $name): void {
                     throw new RuntimeException(
                         "Closure takes an invalid type for its first parameter: $name",
                     );
-                });
+                },
+            );
         $this->closures = $closures;
     }
 
@@ -50,6 +52,7 @@ final class SlimClosuresCollection {
         foreach ($this->closures as $closure) {
             $closure($app);
         }
+
         return $app;
     }
 }

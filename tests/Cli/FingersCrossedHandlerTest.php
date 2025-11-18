@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Cli;
@@ -11,7 +12,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
-class FingersCrossedHandlerTest extends TestCase {
+final class FingersCrossedHandlerTest extends TestCase {
     private BufferedOutput $spy;
     private FingersCrossedHandler $sut;
 
@@ -24,6 +25,7 @@ class FingersCrossedHandlerTest extends TestCase {
         $result = $this->sut->run(
             function (InputParams $input, FingersCrossedOutput $output) {
                 $output->writeln("Hello world");
+
                 return Command::SUCCESS;
             },
         );
@@ -35,6 +37,7 @@ class FingersCrossedHandlerTest extends TestCase {
         $result = $this->sut->run(
             function (InputParams $input, FingersCrossedOutput $output) {
                 $output->writeln("Hello world");
+
                 return Command::FAILURE;
             },
         );
@@ -47,6 +50,7 @@ class FingersCrossedHandlerTest extends TestCase {
             function (InputParams $input, FingersCrossedOutput $output) {
                 $output->writeln("Alpha");
                 $output->writeln("Bravo");
+
                 return Command::FAILURE;
             },
         );
@@ -55,14 +59,17 @@ class FingersCrossedHandlerTest extends TestCase {
 
     public function testDisplaysAllOutputWhenThrows(): void {
         $e = null;
+
         try {
             $this->sut->run(
-                function (InputParams $input, FingersCrossedOutput $output) {
+                function (InputParams $input, FingersCrossedOutput $output): void {
                     $output->writeln("Hello world");
+
                     throw new RuntimeException();
                 },
             );
-        } catch (Throwable $e) {}
+        } catch (Throwable $e) {
+        }
         self::assertSame("Hello world\n", $this->spy->fetch());
         self::assertInstanceOf(Throwable::class, $e);
     }
@@ -72,6 +79,7 @@ class FingersCrossedHandlerTest extends TestCase {
         $this->sut->run(
             function (InputParams $input, FingersCrossedOutput $output) {
                 $output->writeln("Hello world");
+
                 return Command::SUCCESS;
             },
         );
@@ -84,6 +92,7 @@ class FingersCrossedHandlerTest extends TestCase {
                 $output->writeln("Alpha");
                 $this->spy->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
                 $output->writeln("Bravo");
+
                 return Command::SUCCESS;
             },
         );

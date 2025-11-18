@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -25,7 +26,6 @@ final class ServicesBuilderTest extends TestCase {
     }
 
     /**
-     * @param string $pattern
      * @param string[] $expected
      */
     private function assertFiles(string $pattern, array $expected): void {

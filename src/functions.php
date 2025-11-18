@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Collection;
@@ -13,6 +14,7 @@ function findFiles(string $root, string ...$patterns): iterable {
     $globstar = '**/';
 
     $root = rtrim($root, '/');
+
     foreach ($patterns as $pattern) {
         // php glob does not support globstar to match any directory depth. Let’s hack around it
         if (str_contains($pattern, $globstar)) {
@@ -26,10 +28,12 @@ function findFiles(string $root, string ...$patterns): iterable {
                 array_values(iterator_to_array($finder)),
                 static fn (SplFileInfo $file) => $file->getRealPath(),
             );
+
             continue;
         }
 
         $result = glob($root.'/'.ltrim($pattern, '/'));
+
         if (false === $result) {
             throw new RuntimeException('Invalid pattern: '.$pattern);
         }
@@ -45,7 +49,6 @@ function findFiles(string $root, string ...$patterns): iterable {
 function collection($input): Collection {
     return Collection::from($input);
 }
-
 
 /**
  * @template T of mixed

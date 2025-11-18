@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel;
@@ -6,7 +7,7 @@ namespace WonderNetwork\SlimKernel;
 use Psr\Container\ContainerInterface;
 
 final class HookCollection {
-    /** @var StartupHook[]  */
+    /** @var StartupHook[] */
     private array $hooks = [];
     public function __construct() {
     }
@@ -21,6 +22,7 @@ final class HookCollection {
         foreach ($this->hooks as $hook) {
             $hook($builder, $container);
         }
+
         return $container;
     }
 }

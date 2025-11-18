@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Http;
@@ -11,6 +12,7 @@ use WonderNetwork\SlimKernel\Accessor\ArrayAccessor;
 final class RouteArgument {
     public static function of(ServerRequestInterface $request): ArrayAccessor {
         $route = RouteContext::fromRequest($request)->getRoute();
+
         if (null === $route) {
             throw new HttpBadRequestException($request, "Route is not initialized on request");
         }

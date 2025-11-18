@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Cli;
@@ -23,20 +24,23 @@ final class FingersCrossedHandler {
 
     /**
      * @param callable(InputParams $input, FingersCrossedOutput $output):int $closure
-     * @return int
      * @throws Throwable
      */
     public function run(callable $closure): int {
         $output = new FingersCrossedOutput($this->output);
+
         try {
             $result = $closure(InputParams::ofInput($this->input), $output);
+
             if (Command::SUCCESS !== $result) {
                 $output->flush();
             }
         } catch (Throwable $e) {
             $output->flush();
+
             throw $e;
         }
+
         return $result;
     }
 }
