@@ -8,11 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class HelloWorldController {
-    private StreamFactoryInterface $streamFactory;
-
-    public function __construct(StreamFactoryInterface $streamFactory) {
-        $this->streamFactory = $streamFactory;
+final readonly class HelloWorldController {
+    public function __construct(private StreamFactoryInterface $streamFactory) {
     }
 
     public function __invoke(

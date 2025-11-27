@@ -10,11 +10,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-final class CustomErrorMiddleware implements MiddlewareInterface {
-    private ErrorHandlingSpy $spy;
-
-    public function __construct(ErrorHandlingSpy $spy) {
-        $this->spy = $spy;
+final readonly class CustomErrorMiddleware implements MiddlewareInterface {
+    public function __construct(private ErrorHandlingSpy $spy) {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
