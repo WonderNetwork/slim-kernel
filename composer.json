@@ -45,5 +45,15 @@
         "phpunit/phpunit": "^11",
         "bnf/phpstan-psr-container": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.87"
+    },
+    "scripts": {
+      "cs": "@phpcs:check",
+      "phpcs": "@phpcs:check",
+      "phpcs:check": "vendor/bin/php-cs-fixer check --diff --ansi",
+      "phpcs:fix": "vendor/bin/php-cs-fixer fix",
+      "lint": "@phpstan",
+      "phpstan": "vendor/bin/phpstan",
+      "test": "@phpunit",
+      "phpunit": "vendor/bin/phpunit"
     }
 }
