@@ -100,4 +100,3 @@ function indexmap($input, callable $values, callable $keys): array {
         ->map($values)
         ->toArray();
 }
-
