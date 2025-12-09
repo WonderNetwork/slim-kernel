@@ -85,3 +85,18 @@ function map($input, callable ...$fn): array {
 function filter($input, callable $fn): array {
     return collection($input)->filter($fn)->toArray();
 }
+
+/**
+ * @template T of mixed
+ * @template F of mixed
+ * @param iterable<T> $input
+ * @param callable(T,?(int|string)):F $values
+ * @param callable(T,?(int|string)):string $keys
+ * @return array<string,F>
+ */
+function indexmap($input, callable $values, callable $keys): array {
+    return collection($input)
+        ->indexBy($keys)
+        ->map($values)
+        ->toArray();
+}
