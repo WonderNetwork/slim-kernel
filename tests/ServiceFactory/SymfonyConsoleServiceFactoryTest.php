@@ -17,7 +17,9 @@ use function WonderNetwork\SlimKernel\Collection\map;
 final class SymfonyConsoleServiceFactoryTest extends TestCase {
     public function test(): void {
         $servicesBuilder = new ServicesBuilder(__DIR__.'/../Resources/Commands');
-        $sut = new SymfonyConsoleServiceFactory();
+        $sut = new SymfonyConsoleServiceFactory(
+            registrationMethod: ConsoleRegistrationMethod::Latest,
+        );
         $actual = collection($sut($servicesBuilder))->realize();
 
         $commands = $actual
@@ -43,11 +45,11 @@ final class SymfonyConsoleServiceFactoryTest extends TestCase {
         self::assertEquals(
             map(
                 $commands,
-                static fn (string $command) => new MethodInjection('add', [new Reference($command)]),
+                static fn (string $command) => new MethodInjection('addCommand', [new Reference($command)]),
             ),
             collection($definition->getMethodInjections())
                 ->filter(
-                    static fn (MethodInjection $m) => $m->getMethodName() === 'add',
+                    static fn (MethodInjection $m) => $m->getMethodName() === 'addCommand',
                 )
                 ->values()
                 ->toArray(),
