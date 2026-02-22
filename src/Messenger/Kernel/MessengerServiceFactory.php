@@ -64,7 +64,7 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
         // endregion
 
         // region utilities
-        yield CommandBusDependencies::Serializer->value => factory(Serializer::create(...));
+        yield CommandBusDependencies::Serializer->value => factory(fn () => Serializer::create());
         yield SerializerInterface::class => get(CommandBusDependencies::Serializer->value);
         yield CommandBusDependencies::EventDispatcher->value => $this->eventDispatcher ?? new EventDispatcher();
         yield CommandBusDependencies::Logger->value => $this->logger ?? new NullLogger();
