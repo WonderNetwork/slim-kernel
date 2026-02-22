@@ -10,6 +10,8 @@
         "php-di/slim-bridge": "^3.4",
         "symfony/console": "^5.4 | ^6 | ^7",
         "symfony/finder": "^5.4 | ^6 | ^7",
+        "symfony/cache": "^6 | ^7",
+        "symfony/messenger": "^6 | ^7",
         "symfony/property-access": "^7.2",
         "symfony/serializer": "^7.2",
         "phpstan/phpdoc-parser": "^2.0",
@@ -30,7 +32,8 @@
             "WonderNetwork\\SlimKernel\\": "tests/",
             "Acme\\": [
                 "tests/Resources/App/src/",
-                "tests/Resources/ErrorMiddleware/src/"
+                "tests/Resources/ErrorMiddleware/src/",
+                "tests/Resources/Messenger/src/"
             ]
         }
     },
