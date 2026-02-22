@@ -17,12 +17,19 @@ use WonderNetwork\SlimKernel\Messenger\Kernel\MessengerServiceFactory;
 use WonderNetwork\SlimKernel\Messenger\Kernel\TransportLocatorBuilder;
 
 final class MessengerTest extends TestCase {
+    protected function setUp(): void {
+        if (file_exists($filename = __DIR__.'/../../.cache/CompiledContainer.php')) {
+            unlink($filename);
+        }
+    }
+
     public function testMessenger(): void {
         $transportName = 'in-memory';
 
         $root = realpath(__DIR__.'/../Resources/Messenger')
             ?: throw new RuntimeException('Oops');
         $container = KernelBuilder::start($root)
+            ->useCache(__DIR__.'/../../.cache/')
             ->register(
                 new MessengerServiceFactory(
                     commandPath: 'src/*AsyncHandler.php',
