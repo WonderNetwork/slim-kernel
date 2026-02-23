@@ -9,4 +9,6 @@ enum CommandBusDependencies: string {
     case Logger = self::class.'::Logger';
     case EventDispatcher = self::class.'::EventDispatcher';
     case Serializer = self::class.'::Serializer';
+    case Worker = self::class.'::Worker';
+    case SupervisorConfigDir = self::class.'::SupervisorConfigDir';
 }

@@ -13,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Console\Application;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Command\StopWorkersCommand;
@@ -31,6 +32,8 @@ use WonderNetwork\SlimKernel\Messenger\CommandBus;
 use WonderNetwork\SlimKernel\Messenger\QueryBus;
 use WonderNetwork\SlimKernel\ServiceFactory;
 use WonderNetwork\SlimKernel\ServicesBuilder;
+use WonderNetwork\SlimKernel\Supervisor\GenerateSupervisorConfigCommand;
+use WonderNetwork\SlimKernel\Supervisor\SupervisorConfiguration;
 use function DI\autowire;
 use function DI\create;
 use function DI\factory;
@@ -41,10 +44,12 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
     public function __construct(
         private string $commandPath = '/src/Application/Command/**/*Handler.php',
         private string $queryPath = '/src/Application/Query/**/*Handler.php',
+        private string $supervisorConfigDir = 'app/supervisor',
         private null|Closure|Reference|DefinitionHelper|TransportLocatorBuilder $transports = null,
         private null|Closure|Reference|DefinitionHelper|EventDispatcher $eventDispatcher = null,
         private null|Closure|Reference|DefinitionHelper|LoggerInterface $logger = null,
         private null|Closure|Reference|DefinitionHelper|CacheItemPoolInterface $cachePool = null,
+        private null|Closure|Reference|DefinitionHelper|SupervisorConfiguration $programs = null,
     ) {
     }
 
@@ -126,5 +131,29 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
         yield StopWorkersCommand::class => autowire()->constructor(
             restartSignalCachePool: get(CommandBusDependencies::CachePool->value),
         );
+
+        yield CommandBusDependencies::SupervisorConfigDir->value => $this->supervisorConfigDir;
+        yield SupervisorConfiguration::class => $this->programs ?? SupervisorConfiguration::empty();
+        yield GenerateSupervisorConfigCommand::class => autowire()->constructor(
+            configDir: get(CommandBusDependencies::SupervisorConfigDir->value),
+        );
+
+        yield CommandBusDependencies::Worker->value => function (ContainerInterface $container) {
+            $app = new Application('worker');
+            /** @var EventDispatcher $eventDispatcher */
+            $eventDispatcher = $container->get(CommandBusDependencies::EventDispatcher->value);
+
+            $app->setDispatcher($eventDispatcher);
+            $app->addCommands(
+                [
+                    $container->get(StopWorkersCommand::class),
+                    $container->get(ConsumeMessagesCommand::class),
+                    $container->get(GenerateSupervisorConfigCommand::class),
+                ],
+            );
+            $app->setAutoExit(false);
+
+            return $app;
+        };
     }
 }
