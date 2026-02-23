@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Messenger\Kernel;
 
+use ReflectionClass;
 use ReflectionException;
 use ReflectionIntersectionType;
 use ReflectionNamedType;
-use ReflectionObject;
 use ReflectionUnionType;
 use RuntimeException;
 
@@ -15,8 +15,8 @@ final readonly class HandlerToMessageMapping {
     /**
      * @throws ReflectionException
      */
-    public function __invoke(mixed $handler): string {
-        if (false === is_object($handler)) {
+    public function __invoke(string $handler): string {
+        if (false === class_exists($handler)) {
             throw new RuntimeException(
                 sprintf(
                     'Handler must be an object, %s given',
@@ -25,13 +25,13 @@ final readonly class HandlerToMessageMapping {
             );
         }
 
-        $reflectionObject = new ReflectionObject($handler);
+        $reflectionObject = new ReflectionClass($handler);
 
         if (false === $reflectionObject->hasMethod('__invoke')) {
             throw new RuntimeException(
                 sprintf(
                     'Handler %s does not have an __invoke method',
-                    $handler::class,
+                    $handler,
                 ),
             );
         }
@@ -42,7 +42,7 @@ final readonly class HandlerToMessageMapping {
             throw new RuntimeException(
                 sprintf(
                     'Handler %s::__invoke() is expected to have exactly one parameter, actual: %d',
-                    $handler::class,
+                    $handler,
                     $reflectionMethod->getNumberOfParameters(),
                 ),
             );
@@ -52,11 +52,11 @@ final readonly class HandlerToMessageMapping {
 
         return match (true) {
             $type instanceof ReflectionNamedType => $type->getName(),
-            $type instanceof ReflectionUnionType => $this->handleUnionTypes($handler::class, ...$type->getTypes()),
+            $type instanceof ReflectionUnionType => $this->handleUnionTypes($handler, ...$type->getTypes()),
             default => throw new RuntimeException(
                 sprintf(
                     'Handler %s::__invoke($message) is not properly typehinted',
-                    $handler::class,
+                    $handler,
                 ),
             ),
         };

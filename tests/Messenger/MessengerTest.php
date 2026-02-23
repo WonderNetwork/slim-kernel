@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace WonderNetwork\SlimKernel\Messenger;
 
-use Acme\SideEffectsCommand;
-use Acme\StateQuery;
+use Acme\Sample\SideEffectsCommand;
+use Acme\Sample\StateQuery;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -32,8 +32,8 @@ final class MessengerTest extends TestCase {
             ->useCache(__DIR__.'/../../.cache/')
             ->register(
                 new MessengerServiceFactory(
-                    commandPath: 'src/*AsyncHandler.php',
-                    queryPath: 'src/*QueryHandler.php',
+                    commandPath: 'src/Sample/*AsyncHandler.php',
+                    queryPath: 'src/Sample/*QueryHandler.php',
                     transports: TransportLocatorBuilder::start()
                         ->withTransport(
                             name: $transportName,
@@ -65,5 +65,20 @@ final class MessengerTest extends TestCase {
         $consumeMessagesCommand->run(new ArrayInput(['--limit' => 1]), new BufferedOutput());
 
         self::assertSame($some, $queryBus->query(new StateQuery()));
+    }
+
+    public function testHandlersCanDependOnCommandBus(): void {
+        $root = realpath(__DIR__.'/../Resources/Messenger') ?: throw new RuntimeException('Oops');
+        $container = KernelBuilder::start($root)
+            ->register(
+                new MessengerServiceFactory(
+                    commandPath: 'src/Requeue/*Handler.php',
+                    queryPath: 'src/Requeue/*QueryHandler.php',
+                ),
+            )
+            ->build();
+
+        $this->expectNotToPerformAssertions();
+        $container->get(CommandBus::class);
     }
 }

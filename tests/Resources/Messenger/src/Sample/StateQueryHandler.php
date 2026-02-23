@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme;
+namespace Acme\Sample;
 
 use WonderNetwork\SlimKernel\Messenger\HoldsState;
 use WonderNetwork\SlimKernel\Messenger\Query;

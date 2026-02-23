@@ -53,10 +53,10 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
         yield from $commands = $builder->autowire()->glob($this->commandPath);
         yield from $queries = $builder->autowire()->glob($this->queryPath);
         yield AutowiredHandlerLocator::class => autowire()
-            ->constructor([
-                ...collection($commands)->keys()->map(static fn (string $className) => get($className)),
-                ...collection($queries)->keys()->map(static fn (string $className) => get($className)),
-            ]);
+            ->constructor(
+                get(ContainerInterface::class),
+                collection($commands)->concat($queries)->keys()->toArray(),
+            );
         yield HandlersLocatorInterface::class => get(AutowiredHandlerLocator::class);
         yield HandleMessageMiddleware::class => autowire()->constructor(
             handlersLocator: get(HandlersLocatorInterface::class),
