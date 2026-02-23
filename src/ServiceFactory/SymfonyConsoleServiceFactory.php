@@ -6,6 +6,7 @@ namespace WonderNetwork\SlimKernel\ServiceFactory;
 
 use DI\Definition\Helper\CreateDefinitionHelper;
 use Symfony\Component\Console;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use WonderNetwork\SlimKernel\Cli\AutoExit;
 use WonderNetwork\SlimKernel\ServiceFactory;
 use WonderNetwork\SlimKernel\ServicesBuilder;
@@ -34,7 +35,8 @@ final readonly class SymfonyConsoleServiceFactory implements ServiceFactory {
                 ),
                 autowire()
                     ->constructor($this->name)
-                    ->method('setAutoExit', static fn (AutoExit $autoExit) => $autoExit->value()),
+                    ->method('setAutoExit', static fn (AutoExit $autoExit) => $autoExit->value())
+                    ->method('setDispatcher', get(EventDispatcherInterface::class)),
             );
     }
 }

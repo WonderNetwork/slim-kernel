@@ -26,6 +26,7 @@ final class KernelBuilder {
         $this->builder = new ContainerBuilder();
         $this->startupHook = new HookCollection();
         $this->register(new ServiceFactory\SlimServiceFactory());
+        $this->register(new ServiceFactory\EventDispatcherServiceFactory());
     }
 
     /** @param array<string|mixed> $definitions */
