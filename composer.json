@@ -16,7 +16,8 @@
         "symfony/serializer": "^7.2",
         "phpstan/phpdoc-parser": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.6",
-        "wondernetwork/php-collection-library": "^10.0"
+        "wondernetwork/php-collection-library": "^10.0",
+        "monolog/monolog": "^3.10"
     },
     "license": "MIT",
     "autoload": {
@@ -34,6 +35,9 @@
                 "tests/Resources/App/src/",
                 "tests/Resources/ErrorMiddleware/src/",
                 "tests/Resources/Messenger/src/"
+            ],
+            "Acme\\ConsoleLogger\\": [
+                "tests/Resources/ConsoleLogger/src/"
             ]
         }
     },
