@@ -31,6 +31,7 @@ final class WorkerMemoryUsageSubscriber implements EventSubscriberInterface {
         $currentUsage = memory_get_usage();
 
         $difference = abs($this->memoryUsage - $currentUsage);
+
         if ($difference < $this->cutoff) {
             return;
         }
