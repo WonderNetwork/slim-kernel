@@ -7,9 +7,12 @@ namespace WonderNetwork\SlimKernel\Messenger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
+use WonderNetwork\SlimKernel\System\RealSystem;
+use WonderNetwork\SlimKernel\System\System;
 
 final class WorkerMemoryUsageSubscriber implements EventSubscriberInterface {
     private int $memoryUsage;
+    private readonly System $system;
 
     /**
      * @return iterable<string,string>
@@ -23,12 +26,14 @@ final class WorkerMemoryUsageSubscriber implements EventSubscriberInterface {
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly int $cutoff = 1024,
+        System $system = null,
     ) {
-        $this->memoryUsage = memory_get_usage();
+        $this->system = $system ?? new RealSystem();
+        $this->memoryUsage = $this->system->memoryUsage();
     }
 
     public function onWorkerRunning(): void {
-        $currentUsage = memory_get_usage();
+        $currentUsage = $this->system->memoryUsage();
 
         $difference = abs($this->memoryUsage - $currentUsage);
 

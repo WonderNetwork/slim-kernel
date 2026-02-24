@@ -7,31 +7,40 @@ namespace WonderNetwork\SlimKernel\Messenger;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use WonderNetwork\SlimKernel\System\FakeSystem;
 
 final class WorkerMemoryUsageSubscriberTest extends TestCase {
     public function testReportsAboveCutoff(): void {
         $buffer = new TestHandler();
         $logger = new Logger('some');
         $logger->pushHandler($buffer);
-        $memoryLeak = [];
 
-        $sut = new WorkerMemoryUsageSubscriber($logger, cutoff: 10 * 1024);
+        $system = new FakeSystem();
+
+        $sut = new WorkerMemoryUsageSubscriber(
+            logger: $logger,
+            cutoff: 10 * 1024,
+            system: $system,
+        );
         $sut->onWorkerRunning();
         self::assertEmpty($buffer->getRecords());
 
-        $memoryLeak[] = str_repeat(' ', 10 * 1024);
-        // triggers the first log
+        $system->setMemoryUsage(10 * 1024 - 1);
+        $sut->onWorkerRunning();
+        self::assertCount(0, $buffer->getRecords());
+
+        $system->setMemoryUsage(10 * 1024);
         $sut->onWorkerRunning();
         self::assertCount(1, $buffer->getRecords());
-        // the logs themselves take memory, so:
-        $sut->onWorkerRunning();
-        self::assertCount(2, $buffer->getRecords());
-        // no more logs:
-        $sut->onWorkerRunning();
-        $sut->onWorkerRunning();
-        $sut->onWorkerRunning();
-        self::assertCount(2, $buffer->getRecords());
+        self::assertSame([
+            'current' => '10 KB',
+            'sign' => '+',
+            'difference' => '10 KB',
+        ], $buffer->getRecords()[0]->context);
 
-        unset($memoryLeak);
+        $sut->onWorkerRunning();
+        $system->setMemoryUsage(12 * 1024);
+        $sut->onWorkerRunning();
+        self::assertCount(1, $buffer->getRecords());
     }
 }
