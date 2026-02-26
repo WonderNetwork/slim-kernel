@@ -23,6 +23,10 @@ final readonly class EventSubscribersCollection implements ServiceFactory {
     public function __construct(private array $subscribers) {
     }
 
+    public function __invoke(ServicesBuilder $builder): iterable {
+        yield from $this->register();
+    }
+
     /**
      * @param class-string<EventSubscriberInterface> ...$subscribers
      */
@@ -70,9 +74,5 @@ final readonly class EventSubscribersCollection implements ServiceFactory {
                 ->get(EventSubscribersCollection::class)
                 ->addLazyListeners($dispatcher, $container),
         );
-    }
-
-    public function __invoke(ServicesBuilder $builder): iterable {
-        yield from $this->register();
     }
 }
