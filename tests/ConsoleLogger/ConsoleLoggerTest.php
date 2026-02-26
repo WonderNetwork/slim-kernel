@@ -42,10 +42,11 @@ final class ConsoleLoggerTest extends TestCase {
                         return $logger;
                     },
                     ConsoleHandlerEventSubscriber::class => autowire(),
-                    ...EventSubscribersCollection::start()
-                        ->add(ConsoleHandlerEventSubscriber::class)
-                        ->register(),
                 ],
+            )
+            ->register(
+                EventSubscribersCollection::start()
+                    ->add(ConsoleHandlerEventSubscriber::class),
             )
             ->register(
                 new SymfonyConsoleServiceFactory(
