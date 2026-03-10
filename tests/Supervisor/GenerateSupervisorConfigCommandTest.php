@@ -17,6 +17,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
                     name: 'jobs',
                     command: 'bin/worker jobs',
                     concurrency: 3,
+                    startretries: 10,
                 ),
             );
         $configDir = __DIR__.'/../Resources/Supervisor';
@@ -47,6 +48,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
             command=/var/app/current/bin/worker jobs
             process_name=%(program_name)s_%(process_num)02d
             numprocs=3
+            startretries=10
             user=www-data
             autostart=true
             autorestart=true
@@ -58,6 +60,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
             command=/var/app/current/bin/worker async
             process_name=worker
             numprocs=1
+            startretries=15
             user=www-data
             autostart=true
             autorestart=true
@@ -84,6 +87,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
                     name: 'jobs',
                     command: 'bin/worker jobs',
                     concurrency: 3,
+                    startretries: 10,
                 ),
             );
         $configDir = __DIR__.'/../Resources/Supervisor';
@@ -105,6 +109,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
             command=/var/app/current/bin/worker jobs
             process_name=%(program_name)s_%(process_num)02d
             numprocs=3
+            startretries=10
             user=www-data
             autostart=true
             autorestart=true
@@ -116,6 +121,7 @@ final class GenerateSupervisorConfigCommandTest extends TestCase {
             command=/var/app/current/bin/worker async
             process_name=worker
             numprocs=1
+            startretries=15
             user=www-data
             autostart=true
             autorestart=true
