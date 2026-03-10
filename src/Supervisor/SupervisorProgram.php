@@ -10,16 +10,19 @@ final readonly class SupervisorProgram {
             name: $name,
             command: $command,
             concurrency: 1,
+            startretries: 15,
         );
     }
 
     /**
      * @param positive-int $concurrency
+     * @param positive-int $startretries
      */
     public function __construct(
         public string $name,
         public string $command,
         public int $concurrency,
+        public int $startretries,
     ) {
     }
 }
