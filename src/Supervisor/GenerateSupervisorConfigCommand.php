@@ -106,6 +106,7 @@ final class GenerateSupervisorConfigCommand extends Command {
             command=$fullCommand
             process_name=$processName
             numprocs=$concurrency
+            startretries=$program->startretries
             user=www-data
             autostart=true
             autorestart=true

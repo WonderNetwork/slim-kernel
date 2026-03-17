@@ -8,9 +8,11 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use WonderNetwork\SlimKernel\ServiceFactory;
+use WonderNetwork\SlimKernel\ServicesBuilder;
 use function DI\decorate;
 
-final readonly class EventSubscribersCollection {
+final readonly class EventSubscribersCollection implements ServiceFactory {
     public static function start(): self {
         return new self([]);
     }
@@ -19,6 +21,10 @@ final readonly class EventSubscribersCollection {
      * @param list<class-string<EventSubscriberInterface>> $subscribers
      */
     public function __construct(private array $subscribers) {
+    }
+
+    public function __invoke(ServicesBuilder $builder): iterable {
+        yield from $this->register();
     }
 
     /**
