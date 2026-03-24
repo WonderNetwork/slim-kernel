@@ -11,4 +11,6 @@ enum CommandBusDependencies: string {
     case Serializer = self::class.'::Serializer';
     case Worker = self::class.'::Worker';
     case SupervisorConfigDir = self::class.'::SupervisorConfigDir';
+    case SendersLocator = self::class.'::SendersLocator';
+    case ReceiversLocator = self::class.'::ReceiversLocator';
 }
