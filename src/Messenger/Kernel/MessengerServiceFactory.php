@@ -31,6 +31,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use WonderNetwork\SlimKernel\Messenger\CommandBus;
 use WonderNetwork\SlimKernel\Messenger\QueryBus;
 use WonderNetwork\SlimKernel\ServiceFactory;
+use WonderNetwork\SlimKernel\ServiceOfExpectedType;
 use WonderNetwork\SlimKernel\ServicesBuilder;
 use WonderNetwork\SlimKernel\Supervisor\GenerateSupervisorConfigCommand;
 use WonderNetwork\SlimKernel\Supervisor\SupervisorConfiguration;
@@ -78,10 +79,25 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
 
         // region senders
         yield TransportLocatorBuilder::class => $this->transports ?? TransportLocatorBuilder::empty();
-        yield SendersLocator::class => function (TransportLocatorBuilder $config, ContainerInterface $container) {
+        yield CommandBusDependencies::SendersLocator->value => fn (
+            TransportLocatorBuilder $config,
+            ContainerInterface $container,
+        ) => $config->sendersLocator($container);
+        yield CommandBusDependencies::ReceiversLocator->value => fn (
+            TransportLocatorBuilder $config,
+            ContainerInterface $container,
+        ) => $config->receiversLocator($container);
+
+        yield SendersLocator::class => function (ContainerInterface $container) {
+            $sendersLocator = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::SendersLocator->value,
+                expectedType: ContainerInterface::class,
+            );
+
             return new SendersLocator(
                 sendersMap: [],
-                sendersLocator: $config->sendersLocator($container),
+                sendersLocator: $sendersLocator,
             );
         };
 
@@ -101,12 +117,26 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
         yield QueryBus::class => autowire();
 
         yield ConsumeMessagesCommand::class => function (TransportLocatorBuilder $config, ContainerInterface $container) {
-            /** @var LoggerInterface $logger */
-            $logger = $container->get(CommandBusDependencies::Logger->value);
-            /** @var CacheItemPoolInterface $pool */
-            $pool = $container->get(CommandBusDependencies::CachePool->value);
-            /** @var EventDispatcher $eventDispatcher */
-            $eventDispatcher = $container->get(CommandBusDependencies::EventDispatcher->value);
+            $logger = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::Logger->value,
+                expectedType: LoggerInterface::class,
+            );
+            $pool = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::CachePool->value,
+                expectedType: CacheItemPoolInterface::class,
+            );
+            $receiversLocator = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::ReceiversLocator->value,
+                expectedType: ContainerInterface::class,
+            );
+            $eventDispatcher = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::EventDispatcher->value,
+                expectedType: EventDispatcher::class,
+            );
             $eventDispatcher->addSubscriber(
                 new StopWorkerOnRestartSignalListener(
                     cachePool: $pool,
@@ -121,9 +151,11 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
                     busLocator: new Container(),
                     fallbackBus: $container->get(MessageBusInterface::class),
                 ),
-                receiverLocator: $config->receiversLocator($container),
+                receiverLocator: $receiversLocator,
                 eventDispatcher: $eventDispatcher,
                 logger: $logger,
+                // if it works, it works.
+                // if we override the receivers locator, then we’re out of luck
                 receiverNames: array_keys($config->receivers),
             );
         };
@@ -140,8 +172,11 @@ final readonly class MessengerServiceFactory implements ServiceFactory {
 
         yield CommandBusDependencies::Worker->value => function (ContainerInterface $container) {
             $app = new Application('worker');
-            /** @var EventDispatcher $eventDispatcher */
-            $eventDispatcher = $container->get(CommandBusDependencies::EventDispatcher->value);
+            $eventDispatcher = ServiceOfExpectedType::getFromContainer(
+                container: $container,
+                key: CommandBusDependencies::EventDispatcher->value,
+                expectedType: EventDispatcher::class,
+            );
 
             $app->setDispatcher($eventDispatcher);
             $app->addCommands(
