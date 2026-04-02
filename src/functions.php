@@ -13,6 +13,8 @@ use Symfony\Component\Finder\Finder;
 function findFiles(string $root, string ...$patterns): iterable {
     $globstar = '**/';
 
+    $isPhar = str_starts_with($root, 'phar://');
+
     $root = rtrim($root, '/');
 
     foreach ($patterns as $pattern) {
@@ -26,7 +28,7 @@ function findFiles(string $root, string ...$patterns): iterable {
                 ->sortByName();
             yield from map(
                 array_values(iterator_to_array($finder)),
-                static fn (SplFileInfo $file) => $file->getRealPath(),
+                static fn (SplFileInfo $file) => $isPhar ? $file->getPathname() : $file->getRealPath(),
             );
 
             continue;

@@ -41,11 +41,14 @@ final class Autowire {
     private function __construct(string $root, array $composer) {
         $this->root = rtrim($root, '/');
 
+        $isPhar = str_starts_with($root, 'phar://');
+        $normalize = static fn (string $path) => $isPhar ? $path : realpath($path).'/';
+
         $this->autoload = map(
             $composer['autoload']['psr-4'] ?? [],
             static fn ($directories) => map(
                 (array) $directories,
-                static fn (string $directory) => realpath($root.'/'.$directory).'/',
+                static fn (string $directory) => $normalize($root.'/'.$directory),
             ),
         );
     }
