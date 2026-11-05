@@ -26,7 +26,7 @@ final class WorkerMemoryUsageSubscriber implements EventSubscriberInterface {
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly int $cutoff = 1024,
-        System $system = null,
+        ?System $system = null,
     ) {
         $this->system = $system ?? new RealSystem();
         $this->memoryUsage = $this->system->memoryUsage();

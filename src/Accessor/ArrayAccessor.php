@@ -15,7 +15,7 @@ final class ArrayAccessor {
      */
     private $exceptionFactory;
 
-    public static function of(mixed $input, callable $factory = null): self {
+    public static function of(mixed $input, ?callable $factory = null): self {
         $factory ??= fn (string $message) => new ArrayAccessorException($message);
 
         if (is_array($input)) {
