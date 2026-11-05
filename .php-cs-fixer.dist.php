@@ -113,10 +113,10 @@ $rules = [
     'modernize_strpos' => true,
     'modernize_types_casting' => true,
     'multiline_comment_opening_closing' => true,
-    'multiline_promoted_properties' => [
-        'keep_blank_lines' => false,
-        'minimum_number_of_parameters' => 3,
-    ],
+//    'multiline_promoted_properties' => [
+//        'keep_blank_lines' => false,
+//        'minimum_number_of_parameters' => 3,
+//    ],
     'multiline_whitespace_before_semicolons' => [
         'strategy' => 'no_multi_line',
     ],
