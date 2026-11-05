@@ -38,12 +38,12 @@ final class RequestParams {
     }
 
     /** @return never */
-    public function notFound(string $message = null): void {
+    public function notFound(?string $message = null): void {
         throw new HttpNotFoundException($this->request, $message);
     }
 
     /** @return never */
-    public function badRequest(string $message = null): void {
+    public function badRequest(?string $message = null): void {
         throw new HttpBadRequestException($this->request, $message);
     }
 
