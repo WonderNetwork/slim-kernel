@@ -18,7 +18,6 @@ final readonly class SymfonyConsoleServiceFactory implements ServiceFactory {
     public function __construct(
         private string $path = '/src/Cli/**/*Command.php',
         private string $name = 'unknown',
-        private ConsoleRegistrationMethod $registrationMethod = ConsoleRegistrationMethod::Deprecated,
     ) {
     }
 
@@ -30,7 +29,7 @@ final readonly class SymfonyConsoleServiceFactory implements ServiceFactory {
             ->keys()
             ->reduce(
                 fn (CreateDefinitionHelper $def, string $command) => $def->method(
-                    $this->registrationMethod->value,
+                    'addCommand',
                     get($command),
                 ),
                 autowire()

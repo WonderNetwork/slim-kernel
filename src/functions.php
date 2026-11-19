@@ -69,12 +69,12 @@ function toArray($input): array {
  * @return F[]
  */
 function map($input, callable ...$fn): array {
-    // @phpstan-ignore method.nonObject
     return collection($fn)
         ->reduce(
             fn (Collection $collection, callable $fn) => $collection->map($fn),
             collection($input),
         )
+        // @phpstan-ignore method.nonObject
         ->toArray();
 }
 

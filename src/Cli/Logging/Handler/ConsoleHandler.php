@@ -16,6 +16,7 @@ use WonderNetwork\SlimKernel\Cli\Logging\Formatter\ConsoleFormatter;
  */
 final class ConsoleHandler extends AbstractProcessingHandler {
     private const array VERBOSITY_LEVEL_MAP = [
+        OutputInterface::VERBOSITY_SILENT => Level::Critical,
         OutputInterface::VERBOSITY_QUIET => Level::Error,
         OutputInterface::VERBOSITY_NORMAL => Level::Warning,
         OutputInterface::VERBOSITY_VERBOSE => Level::Notice,
