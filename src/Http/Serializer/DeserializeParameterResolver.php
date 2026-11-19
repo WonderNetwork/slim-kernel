@@ -74,7 +74,7 @@ final readonly class DeserializeParameterResolver implements ParameterResolver {
                         sprintf(
                             "Failed to parse input at path %s. Expected %s, got %s",
                             $e->getPath(),
-                            implode(', ', $e->getExpectedTypes()),
+                            implode(', ', (array) $e->getExpectedTypes()),
                             $e->getCurrentType(),
                         ),
                     );

@@ -17,9 +17,7 @@ use function WonderNetwork\SlimKernel\Collection\map;
 final class SymfonyConsoleServiceFactoryTest extends TestCase {
     public function test(): void {
         $servicesBuilder = new ServicesBuilder(__DIR__.'/../Resources/Commands');
-        $sut = new SymfonyConsoleServiceFactory(
-            registrationMethod: ConsoleRegistrationMethod::Latest,
-        );
+        $sut = new SymfonyConsoleServiceFactory();
         $actual = collection($sut($servicesBuilder))->realize();
 
         $commands = $actual

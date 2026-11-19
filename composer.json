@@ -2,23 +2,23 @@
     "name": "wondernetwork/slim-kernel",
     "type": "library",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.5",
         "ext-json": "*",
         "slim/slim": "^4.14",
         "slim/psr7": "^1.6",
         "php-di/php-di": "^7",
         "php-di/slim-bridge": "^3.4",
-        "symfony/console": "^5.4 | ^6 | ^7",
-        "symfony/finder": "^5.4 | ^6 | ^7",
-        "symfony/cache": "^6 | ^7",
-        "symfony/messenger": "^6 | ^7",
-        "symfony/property-access": "^7.2",
-        "symfony/serializer": "^7.2",
+        "symfony/console": "^5.4 | ^6 | ^7 | ^8",
+        "symfony/finder": "^5.4 | ^6 | ^7 | ^8",
+        "symfony/cache": "^6 | ^7 | ^8",
+        "symfony/messenger": "^6 | ^7 | ^8",
+        "symfony/property-access": "^7.2 | ^8",
+        "symfony/serializer": "^7.2 | ^8",
         "phpstan/phpdoc-parser": "^2.0",
-        "phpdocumentor/reflection-docblock": "^5.6",
+        "phpdocumentor/reflection-docblock": "^5.6 || ^6",
         "wondernetwork/php-collection-library": "^10.0 | ^11.0",
         "monolog/monolog": "^3.10",
-        "symfony/event-dispatcher": "^7.4"
+        "symfony/event-dispatcher": "^7.4 | ^8"
     },
     "license": "MIT",
     "autoload": {
@@ -50,9 +50,9 @@
     ],
     "require-dev": {
         "phpstan/phpstan": "^2",
-        "phpunit/phpunit": "^11 || ^12",
+        "phpunit/phpunit": "^13",
         "bnf/phpstan-psr-container": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.87"
+        "friendsofphp/php-cs-fixer": "^3"
     },
     "scripts": {
       "cs": "@phpcs:check",

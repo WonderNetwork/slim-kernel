@@ -15,9 +15,9 @@ final class WorkerMemoryUsageSubscriber implements EventSubscriberInterface {
     private readonly System $system;
 
     /**
-     * @return iterable<string,string>
+     * @return array<string,string>
      */
-    public static function getSubscribedEvents(): iterable {
+    public static function getSubscribedEvents(): array {
         return [
             WorkerRunningEvent::class => 'onWorkerRunning',
         ];
