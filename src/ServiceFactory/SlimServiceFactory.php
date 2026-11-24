@@ -32,6 +32,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use WonderNetwork\SlimKernel\Http\ClientCertificate\ChainClientCertificateSourceFactory;
+use WonderNetwork\SlimKernel\Http\ClientCertificate\ClientCertificateSource;
+use WonderNetwork\SlimKernel\Http\HttpEnvironment;
 use WonderNetwork\SlimKernel\Http\Serializer\DeserializeParameterResolver;
 use WonderNetwork\SlimKernel\Http\Serializer\JsonSerializingInvoker;
 use WonderNetwork\SlimKernel\Http\Serializer\JsonSerializingInvokerOptions;
@@ -113,6 +116,9 @@ final class SlimServiceFactory implements ServiceFactory {
         };
 
         yield JsonSerializingInvokerOptions::class => static fn () => JsonSerializingInvokerOptions::onlyExplicitlyMarked();
+
+        yield HttpEnvironment::class => HttpEnvironment::Untrusted;
+        yield ClientCertificateSource::class => ChainClientCertificateSourceFactory::create(...);
 
         yield ResponseFactoryInterface::class => static fn () => new ResponseFactory();
         yield StreamFactoryInterface::class => static fn () => new StreamFactory();
