@@ -42,7 +42,7 @@ final class DeserializeParameterResolverTest extends TestCase {
             ],
         ];
 
-        $request = (new ServerRequestFactory())
+        $request = new ServerRequestFactory()
             ->createServerRequest('GET', '/?'.http_build_query($get))
             ->withParsedBody($post);
         $response = $app->handle($request);
@@ -83,7 +83,7 @@ final class DeserializeParameterResolverTest extends TestCase {
             ],
         ];
 
-        $request = (new ServerRequestFactory())
+        $request = new ServerRequestFactory()
             ->createServerRequest('GET', '/')
             ->withParsedBody($post);
 

@@ -284,3 +284,17 @@ you can register your own instance using the following container key:
 ```
 \WonderNetwork\SlimKernel\ServiceFactory\SlimServiceFactory::INPUT_DENORMALIZER
 ```
+
+## Generating Apache `<Vhost>` config
+
+The package provides an opinionated builder for Apache vhost config files.
+
+```php
+WonderNetwork\SlimKernel\Apache\ApacheConfigurationGenerator::generate(
+    WonderNetwork\SlimKernel\Apache\Vhost::http('example.com'),
+    WonderNetwork\SlimKernel\Apache\Vhost::secure('example.com')
+        ->withAlias('www.example.com'),
+)
+```
+
+[Learn more about about this components in a separate page](doc/apache-configuration-generator.md)
