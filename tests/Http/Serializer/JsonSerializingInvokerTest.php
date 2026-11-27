@@ -12,17 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
 final class JsonSerializingInvokerTest extends TestCase {
-    /**
-     * @return iterable<array{0:mixed}>
-     */
-    public static function dataSimpleTypes(): iterable {
-        yield [null];
-        yield [1];
-        yield [1.5];
-        yield ["hello"];
-        yield [['message' => 'Success']];
-    }
-
     #[DataProvider('dataSimpleTypes')]
     public function testSerializesSimpleTypes(mixed $result): void {
         $sut = JsonSerializingInvokerMother::all();
@@ -36,6 +25,16 @@ final class JsonSerializingInvokerTest extends TestCase {
 
         $response = $sut->call(fn () => $result);
         self::assertSame($result, $response);
+    }
+    /**
+     * @return iterable<array{0:mixed}>
+     */
+    public static function dataSimpleTypes(): iterable {
+        yield [null];
+        yield [1];
+        yield [1.5];
+        yield ["hello"];
+        yield [['message' => 'Success']];
     }
 
     public function testSerializesJsonSerializable(): void {

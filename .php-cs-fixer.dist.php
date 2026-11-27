@@ -123,7 +123,7 @@ $rules = [
     'native_function_casing' => true,
     'native_type_declaration_casing' => true,
     'new_expression_parentheses' => [
-        'use_parentheses' => true,
+        'use_parentheses' => false,
     ],
     'new_with_parentheses' => [
         'anonymous_class' => true,
@@ -261,6 +261,7 @@ $rules = [
         'imports_order' => ['const', 'class', 'function'],
     ],
     'ordered_interfaces' => true,
+    'php_unit_data_provider_method_order' => ['placement' => 'after'],
     'phpdoc_align' => [
         'align' => 'left',
     ],
